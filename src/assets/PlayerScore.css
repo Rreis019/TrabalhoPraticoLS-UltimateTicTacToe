@@ -1,0 +1,64 @@
+
+
+
+.score-panel{
+  
+    width: 100%;
+    height: clamp(40px,10vw,80px);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-score{
+    display: flex;
+    justify-content: space-between;
+    width: 40%;
+    height: 100%;
+    background-color: #373633;
+    border-radius: 5px;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+    align-items: center;
+}
+
+.player-score .player-name{
+    margin-inline: 10px;
+    font-size:  clamp(16px,3vw,32px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.score-panel h1{
+    color: white;
+    font-size: 48px;
+    font-family: 'Roboto', sans-serif;
+    font-size:  clamp(24px,5vw,48px);
+
+}
+
+.player-score-right{
+    background-color: rgb(46,46,46);
+    width: 10%;
+    height: 100%;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    
+    font-size: clamp(16px,2vw,32px);
+    font-family: 'Raleway', sans-serif;
+    padding-inline:  clamp(10px,5vw,40px);
+}
+
+.flip-horizontal {
+    transform: scaleX(-1);
+}
+  
+.vertical-rl{
+    transform: scaleX(-1);
+    direction: rtl;
+}

@@ -1,0 +1,48 @@
+:root{
+    --darktheme-background-square:	#373633;
+    --color-circle: #DD5E61;
+    --color-times:#76A4F1;
+    --color-cell-times-selected: #4A68A3;
+    --color-cell-circle-selected: #A2443E;
+}
+
+
+.square{
+    width: 100%;
+    max-width: 70px;
+    aspect-ratio: 1/1;
+    background-color: var(--darktheme-background-square);
+    border-radius: clamp(5px,2vw,12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease-in-out, filter 0.2s ease-in-out;
+
+}
+
+
+.square .circle{ 
+    width: 60%;
+    height: 60%;
+    color: var(--color-circle);
+}
+
+.square.selected-p1 { background-color: var(--color-cell-times-selected); }
+.square.selected-p2 { background-color: var(--color-cell-circle-selected); }
+
+
+.square .times{ 
+    width: 80%;
+    height: 80%;
+    color: var(--color-times);
+    
+}
+
+.square.hover{
+    filter: brightness(110%);
+}
+
+.square.darker{
+    filter: brightness(70%);
+}
+
