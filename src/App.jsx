@@ -4,11 +4,11 @@ import Celula from "./assets/Celula";
 
 
 import InputFadeUp from "./assets/InputFadeUp";
+import RadioPicker from "./assets/RadioPicker";
+
 import './app.css'
 import React, { useState } from 'react';
 
-
-import ButtonSwipe from "./assets/ButtonSwipe";
 
 import Modal from "./assets/Modal";
 
@@ -86,16 +86,43 @@ function App() {
     }
   });
   
+  const inputStyle = {
+    backgroundColor: "#373633",
+    color: "white"
+  };
+  
 
+  const menuStyle = {
+     gap:"10px",
+     display:"flex"
+  };
   
   
   
   return(
     <div className="app">
+
+      {/*
       <Modal title="Vencedor" buttonOk buttonCancel >
         <p>Parabens!!!</p>
         <p>O Manuel ganhou a partida de Tic Tac Toe</p>
-        <InputFadeUp title="Nome"></InputFadeUp>
+        </Modal>
+      */}
+
+      <Modal  title="Ultimate TicTacToe" buttonOk buttonCancel >
+        <div style={menuStyle}>
+          <InputFadeUp style={inputStyle}  title="Nome 1º Jogador"></InputFadeUp>
+          <InputFadeUp style={inputStyle} title="Nome 2º Jogador"></InputFadeUp>
+
+          <p>Modo de jogo</p>
+          <RadioPicker
+            name="GameMode"
+            options={[
+              { name: "Player Vs Computer", value: "PvC" },
+              { name: "Player Vs Player", value: "PvP" },
+            ]}
+          />
+        </div>
       </Modal>
       <div className="container">
         <ScorePanel/>

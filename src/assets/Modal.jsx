@@ -1,8 +1,10 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import './Modal.css'
 import ButtonSwipe from "./ButtonSwipe";
+import './Modal.css'
+
+
 function Modal(props) 
 {
     //title
