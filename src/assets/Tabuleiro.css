@@ -53,7 +53,6 @@
 
 .boards{
     width: 100%;
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: clamp(5px, 2vw, 20px);

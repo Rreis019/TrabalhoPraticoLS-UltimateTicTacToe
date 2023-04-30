@@ -27,8 +27,7 @@ function Celula(props){
             var newBoard = [...board];
             newBoard[tableIndex][index] = playerSymbol;
             gameManager.checkForWinnerInSelectedTable(tableIndex);
-
-            
+            gameManager.checkForWinnerInGame();
             
             
             setGameManager(prevState => ({
