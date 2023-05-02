@@ -18,3 +18,11 @@
     height: 100%;
     background-color: #212121;
 }
+
+/*-----------------*/
+
+.start-menu{
+    display:flex;
+    gap:10px;
+    flex-direction: column;
+}

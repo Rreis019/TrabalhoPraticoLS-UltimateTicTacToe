@@ -13,7 +13,13 @@ import React, { useState } from 'react';
 import Modal from "./assets/Modal";
 
 
+import Toast from "./assets/Toast";
+
+
 function App() {
+  const [startMenuVisible, setStartMenuVisible] = useState(true);
+  const [firstPlayerName,setFirstName] = useState("");
+  const [secondPlayerName,setSecondName] = useState("");
 
   const winningPatterns = [    
     [0, 1, 2],//1 linha
@@ -91,14 +97,33 @@ function App() {
     color: "white"
   };
   
+  function startGame()
+  {
+    console.log(firstPlayerName);
+    
+    if(firstPlayerName.trim() === ''){
+      console.log("First name empty");
+      //chama toast
+      return;
+    }
 
-  const menuStyle = {
-     gap:"10px",
-     display:"flex"
-  };
+    if(secondPlayerName.trim() === ''){
+      console.log("Second Player name empty");
+      //chama toast
+      return;
+    }
+
+    //verifica se o campo esta vazio
+    
+    
+    
+    setStartMenuVisible(false);
+  }
+
   
   
-  
+
+
   return(
     <div className="app">
 
@@ -109,10 +134,11 @@ function App() {
         </Modal>
       */}
 
-      <Modal  title="Ultimate TicTacToe" buttonOk buttonCancel >
-        <div style={menuStyle}>
-          <InputFadeUp style={inputStyle}  title="Nome 1º Jogador"></InputFadeUp>
-          <InputFadeUp style={inputStyle} title="Nome 2º Jogador"></InputFadeUp>
+      <Modal  title="Ultimate TicTacToe" onClickOk={startGame}  isVisible={startMenuVisible} buttonOk="Começar">
+        <div className="start-menu">
+          <p>Nome dos Jogadores</p>
+          <InputFadeUp setInputText={setFirstName} style={inputStyle}  title="Nome 1º Jogador"></InputFadeUp>
+          <InputFadeUp setInputText={setSecondName} style={inputStyle} title="Nome 2º Jogador"></InputFadeUp>
 
           <p>Modo de jogo</p>
           <RadioPicker
@@ -130,5 +156,12 @@ function App() {
       </div>
     </div>
   );
+
+  return (
+    <>
+      <Toast type="warning"  title="O primeiro nome esta vazio"  ></Toast>
+    </>
+  );
+  
 }
 export default App;

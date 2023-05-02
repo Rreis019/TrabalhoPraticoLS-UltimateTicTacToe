@@ -1,4 +1,4 @@
-
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import ButtonSwipe from "./ButtonSwipe";
@@ -10,7 +10,7 @@ function Modal(props)
     //title
     //msg
     //buttons
-
+    if(props.isVisible == false){return <></>;}
 
     return (
         <div className='modal-fixed'>
@@ -29,7 +29,7 @@ function Modal(props)
                         <ButtonSwipe className="btn-cancel">Sair</ButtonSwipe>
                         ): null}
                     { props.buttonOk !== undefined ?(
-                        <ButtonSwipe className='btn-continue'>Continuar</ButtonSwipe>
+                        <ButtonSwipe onClick={props.onClickOk} className='btn-continue'>{props.buttonOk}</ButtonSwipe>
                         ): null}
                     
                 </div>
