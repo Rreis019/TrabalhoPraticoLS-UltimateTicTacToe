@@ -1,18 +1,10 @@
-import Tabuleiros from "./assets/Tabuleiros";
+import './app.css'
+import Tables from "./assets/Tables";
 import ScorePanel from "./assets/ScorePanel";
-import Celula from "./assets/Celula";
-
-
 import InputFadeUp from "./assets/InputFadeUp";
 import RadioPicker from "./assets/RadioPicker";
-
-import './app.css'
 import React, { useState } from 'react';
-
-
 import Modal from "./assets/Modal";
-
-
 import Toast from "./assets/Toast";
 
 
@@ -152,7 +144,7 @@ function App() {
       </Modal>
       <div className="container">
         <ScorePanel/>
-        <Tabuleiros gameManager={gameManager} setGameManager={setGameManager} />
+        <Tables gameManager={gameManager} setGameManager={setGameManager} />
       </div>
     </div>
   );
