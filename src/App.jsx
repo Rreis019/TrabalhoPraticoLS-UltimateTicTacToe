@@ -13,6 +13,11 @@ function App() {
   const [firstPlayerName,setFirstName] = useState("");
   const [secondPlayerName,setSecondName] = useState("");
 
+  const [Toasts, setToasts] = useState([]);
+
+
+  const [gameMode,setGameMode] = useState("");
+
   const winningPatterns = [    
     [0, 1, 2],//1 linha
     [3, 4, 5],//2 linha
@@ -31,6 +36,9 @@ function App() {
     selectedTable: 0, //indica qual tabela esta selecionada
     scoreP1: 0,
     scoreP2: 0,
+    firstPlayerName : "...",
+    secondPlayerName : "...",
+    gameMode:"",
 
 
     cleanTables : function()
@@ -91,22 +99,44 @@ function App() {
   
   function startGame()
   {
-    console.log(firstPlayerName);
+    setToasts([]);
+    console.log(Toasts);
     
     if(firstPlayerName.trim() === ''){
-      console.log("First name empty");
-      //chama toast
+      const newToast = {
+        type: "warning",
+        message: undefined,
+        title: "Primeiro nome esta vazio"
+      };
+      //setToasts([...Toasts, newToast]);
+      setToasts([newToast]);
       return;
     }
 
     if(secondPlayerName.trim() === ''){
-      console.log("Second Player name empty");
-      //chama toast
+      const newToast = {
+        type: "warning",
+        message: undefined,
+        title: "Segundo nome esta vazio"
+      };
+      //setToasts([...Toasts, newToast]);
+      setToasts([newToast]);
       return;
     }
 
     //verifica se o campo esta vazio
+    if(gameMode.trim() === ''){
+      const newToast = {
+        type: "warning",
+        message: undefined,
+        title: "Escolha um modo de jogo"
+      };
+      //setToasts([...Toasts, newToast]);
+      setToasts([newToast]);
+      return;
+    }
     
+
     
     
     setStartMenuVisible(false);
@@ -118,6 +148,10 @@ function App() {
 
   return(
     <div className="app">
+
+      {Toasts.map((toast,index) => (
+           <Toast key={index} type={toast.type}  title={toast.title} message={toast.message}   ></Toast>
+      ))}
 
       {/*
       <Modal title="Vencedor" buttonOk buttonCancel >
@@ -135,6 +169,7 @@ function App() {
           <p>Modo de jogo</p>
           <RadioPicker
             name="GameMode"
+            setValue={setGameMode}
             options={[
               { name: "Player Vs Computer", value: "PvC" },
               { name: "Player Vs Player", value: "PvP" },
@@ -143,7 +178,7 @@ function App() {
         </div>
       </Modal>
       <div className="container">
-        <ScorePanel/>
+        <ScorePanel gameManager={gameManager}/>
         <Tables gameManager={gameManager} setGameManager={setGameManager} />
       </div>
     </div>

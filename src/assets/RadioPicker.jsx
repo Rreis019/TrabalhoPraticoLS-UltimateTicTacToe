@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import "./RadioPicker.css";
 
-function RadioPicker({ name, options }) {
+function RadioPicker({ setValue,name, options }) {
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
-    console.log(event.target.value);
+
+    if(setValue !== undefined){
+      setValue(event.target.value);
+    }
   };
 
   return (

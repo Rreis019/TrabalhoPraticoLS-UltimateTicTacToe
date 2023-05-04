@@ -6,9 +6,9 @@ function ScorePanel(props)
 {
     return (
        <div className='score-panel'>
-            <PlayerScore text="Rodrigodddddddddd" score="0"/>
+            <PlayerScore text={props.gameManager.firstPlayerName} score={props.gameManager.scoreP1} />
             <h1>Vs</h1>
-            <PlayerScore text="Rodrigo" score="0" flip/>
+            <PlayerScore text={props.gameManager.secondPlayerName} score={props.gameManager.scoreP2} flip/>
        </div>
     );
 }

@@ -1,5 +1,10 @@
 
 .toast-1 {
+    position: fixed;
+    right: 25px;
+    top: 25px;
+    transition: transform 3s ease-in-out;
+
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -16,6 +21,8 @@
     background-color: rgb(23, 23, 23);
 
 }
+
+@media screen and (max-width: 480px) {.toast-1 {right: 25px;top: 25px;}}
 
 .toast-1 .logo{
     font-size: 24px;
@@ -75,7 +82,7 @@
 }
 .toast-1 h6{font-size: 18px; color: white;     font-family: 'Tahoma', sans-serif;}
 @media screen and (max-width:500px) {
-    .toast-1 {padding-inline: 15px; width: 100vw;}
+    .toast-1 {min-width: 0px; padding-inline: 15px; width: 100vw; right: 0px; }
     .toast-1 .toast-1-icon{    margin-inline: 10px;}
     .toast-1 .toast-1-icon{ width: 25px;height: 25px;}
     .toast-1 .logo{font-size: 10px;}
