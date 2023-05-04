@@ -2,7 +2,7 @@
 import './Toast.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faInfo, faTimes,faCheck } from '@fortawesome/free-solid-svg-icons';
-
+import React, { useState } from 'react';
 function Toast(props)
 {
     const { type, title, message } = props;
@@ -17,6 +17,10 @@ function Toast(props)
       icon = <FontAwesomeIcon className="logo" icon={faCheck} />;
     }
   
+    if(props.isVisible === false){return <></>;}
+
+    function onClickclose(){ props.setIsVisible(false)}
+
     return (
         <div className={`toast-1 toast-1-${type}`}>
         <div className="toast-1-left">
@@ -31,7 +35,7 @@ function Toast(props)
             </div>
         </div>
         <div className="toast-1-right">
-            <FontAwesomeIcon className='close' icon={faTimes} />
+            <FontAwesomeIcon onClick={onClickclose} className='close' icon={faTimes} />
         </div>
         </div>
     );

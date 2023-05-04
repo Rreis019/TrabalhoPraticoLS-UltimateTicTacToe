@@ -10,9 +10,12 @@ import Toast from "./assets/Toast";
 
 function App() {
   const [startMenuVisible, setStartMenuVisible] = useState(true);
+  const [winnerMenuVisible, setWinnerMenuVisible] = useState(false);
+
   const [firstPlayerName,setFirstName] = useState("");
   const [secondPlayerName,setSecondName] = useState("");
 
+  const [ToastsVisible, setToastsVisible] = useState(true);  
   const [Toasts, setToasts] = useState([]);
 
 
@@ -29,23 +32,46 @@ function App() {
     [2, 4, 6] //2 diagonal
   ];
 
-  const [gameManager, setGameManager] = useState({ //Game Manager
+  var [gameManager, setGameManager] = useState({ //Game Manager
     player: true, //indica qual player vai jogar | player == false ("O") | player == true ("X")
     board: Array.from({ length: 9 }, () => Array(9).fill('')), //Matrix 2D array que em cada array vai ter texto de cada celula
     boardWin: Array(9).fill(-1), //Indica quem ganhou no tabuleiros 0 -> p1 | 1 -> p2
-    selectedTable: 0, //indica qual tabela esta selecionada
+    selectedTable: 4, //indica qual tabela esta selecionada
     scoreP1: 0,
     scoreP2: 0,
+    winner: -1, //Indica quem ganhou
     firstPlayerName : "...",
     secondPlayerName : "...",
     gameMode:"",
 
 
-    cleanTables : function()
+    cleanTable : function()
     {
-       this.boardWin = Array(9).fill(-1);
-       this.board = Array.from({ length: 9 }, () => Array(9).fill(''));
+       const newboardWin = Array(9).fill(-1);
+       const newboard = Array.from({ length: 9 }, () => Array(9).fill(''));
+       setGameManager(prevState => ({...prevState,
+        board : newboard,
+        boardWin:newboardWin,
+        selectedTable: 4
+      }));
     },
+
+    resetScore : function()
+    {
+      setGameManager(prevState => ({...prevState,
+        scoreP1: 0,
+        scoreP2: 0,
+      }));
+    },
+
+    resetName: function()
+    {
+      setGameManager(prevState => ({...prevState,
+        firstPlayerName: "...",
+        secondPlayerName: "...",
+      }));
+    },
+
 
     checkForWinnerInGame : function()
     {
@@ -56,15 +82,16 @@ function App() {
             boardWin[b] == player &&
             boardWin[c] == player) {
             
+
               //Aumentar a pontução do jogo ganhou 
-              player ? gameManager.scoreP2++ : gameManager.scoreP1++; 
+              if(player === true){
+                setGameManager(prevState => ({...prevState,scoreP1:this.scoreP1+1}));
+              }
+              else{
+                setGameManager(prevState => ({...prevState,scoreP2: this.scoreP2+1}));
+              }
 
-              //Abre algum tipo de modal indicar quem ganhou e se quer continuar
-
-              //Limpar tabuleiro
-              //this.cleanTables();
-
-            console.log("Ganhou Jogo");
+            setWinnerMenuVisible(true);
             return;
           }
         }
@@ -76,6 +103,9 @@ function App() {
       const { board, boardWin ,player} = this;
       console.log(this);
       if(boardWin[tableIndex] !== -1){return;}
+      
+     
+
       
       const currentPlayer = player === false ? "X" : "O";
 
@@ -100,13 +130,13 @@ function App() {
   function startGame()
   {
     setToasts([]);
-    console.log(Toasts);
+    setToastsVisible(true);
     
     if(firstPlayerName.trim() === ''){
       const newToast = {
         type: "warning",
         message: undefined,
-        title: "Primeiro nome esta vazio"
+        title: "Primeiro nome esta vazio",
       };
       //setToasts([...Toasts, newToast]);
       setToasts([newToast]);
@@ -117,7 +147,7 @@ function App() {
       const newToast = {
         type: "warning",
         message: undefined,
-        title: "Segundo nome esta vazio"
+        title: "Segundo nome esta vazio",
       };
       //setToasts([...Toasts, newToast]);
       setToasts([newToast]);
@@ -129,36 +159,59 @@ function App() {
       const newToast = {
         type: "warning",
         message: undefined,
-        title: "Escolha um modo de jogo"
+        title: "Escolha um modo de jogo",
       };
       //setToasts([...Toasts, newToast]);
       setToasts([newToast]);
       return;
     }
     
-
+    setGameManager(prevState => ({
+      ...prevState,
+      firstPlayerName: firstPlayerName,
+      secondPlayerName: secondPlayerName,
+    }));
     
     
     setStartMenuVisible(false);
   }
 
-  
-  
+  function onClickWinnerMenuOK()
+  {
+    gameManager.cleanTable();
+    setWinnerMenuVisible(false);
+  }
 
+  function backToMenu()
+  {
+    gameManager.resetScore();
+    gameManager.cleanTable();
+    gameManager.resetName();
+    setFirstName("");
+    setSecondName("");
+    setGameMode("");
+    setStartMenuVisible(true);
+    setWinnerMenuVisible(false);
+  }
 
   return(
     <div className="app">
 
       {Toasts.map((toast,index) => (
-           <Toast key={index} type={toast.type}  title={toast.title} message={toast.message}   ></Toast>
+           <Toast key={index} type={toast.type} isVisible={ToastsVisible} setIsVisible={setToastsVisible}   title={toast.title} message={toast.message}   ></Toast>
       ))}
 
-      {/*
-      <Modal title="Vencedor" buttonOk buttonCancel >
+      {
+      <Modal title="Vencedor" isVisible={winnerMenuVisible} onClickCancel={backToMenu}  onClickOk={onClickWinnerMenuOK} buttonOk="Continuar" buttonCancel >
         <p>Parabens!!!</p>
-        <p>O Manuel ganhou a partida de Tic Tac Toe</p>
+
+        {gameManager.player === false ?
+          <p >O <span  style={{ color: '#DD5E61' }}>{firstPlayerName}</span> ganhou a partida de Tic Tac Toe</p>:
+          <p>O <span  style={{ color: '#4A68A3' }}>{secondPlayerName}</span> ganhou a partida de Tic Tac Toe</p>
+        }
+       
         </Modal>
-      */}
+      }
 
       <Modal  title="Ultimate TicTacToe" onClickOk={startGame}  isVisible={startMenuVisible} buttonOk="Começar">
         <div className="start-menu">

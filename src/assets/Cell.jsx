@@ -7,22 +7,20 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 
 function Celula(props){
-    const [text, setText] = useState(''); //Tem a letra "X" ou "O"
+    
     //const [selected, setSelected] = useState(false); //Indica se o tabuleiro onde esta célula está selecionado
     const [hovered, setHovered] = useState(false); //Indica se o mouse esta por cima da célula
     //const [player, setPlayer] = useState(true);  //Indica quem esta jogar p1->false | p2->true
+    const { selected, gameManager, setGameManager,tableIndex, index } = props;
     
     const handleMouseEnter = () => {setHovered(true);};
     const handleMouseLeave = () => {setHovered(false);};
     const handleClick = () => {
-        const { selected, gameManager, setGameManager,tableIndex, index } = props;
-        if (selected && text === '') {
-          const { board, player } = gameManager;
+        if (selected && gameManager.board[tableIndex][index] === '') {
+            const { board, player } = gameManager;
 
-          const playerSymbol = player ? "O" : "X";
-          setText(playerSymbol);
-          
-          console.log(tableIndex + " " + index);
+            const playerSymbol = player ? "O" : "X";
+            console.log(tableIndex + " " + index);
             
             var newBoard = [...board];
             newBoard[tableIndex][index] = playerSymbol;
@@ -41,13 +39,13 @@ function Celula(props){
 
     return (
         <div 
-        className={`square${props.selected && hovered && text === '' ? 'hover' : ''}${props.selected && !props.gameManager.player ? ' selected-p1' : ''}${props.selected && props.gameManager.player ? ' selected-p2' : ''}${props.selected && text !== '' ? ' darker' : ''}`}
+        className={`square${props.selected && hovered && gameManager.board[tableIndex][index] === '' ? 'hover' : ''}${props.selected && !props.gameManager.player ? ' selected-p1' : ''}${props.selected && props.gameManager.player ? ' selected-p2' : ''}${props.selected &&  gameManager.board[tableIndex][index] !== '' ? ' darker' : ''}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}>
-            {text === 'X' ? (
+            {gameManager.board[tableIndex][index] === 'X' ? (
                 <FontAwesomeIcon className='times' icon={faTimes} />
-            ):text === 'O' ? (
+            ):gameManager.board[tableIndex][index] === 'O' ? (
                 <FontAwesomeIcon className='circle' icon={faCircle} />
             ) : null}
         </div>

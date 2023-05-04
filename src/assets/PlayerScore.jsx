@@ -7,8 +7,8 @@ function PlayerScore(props) {
 
   return (
     <div className={`player-score ${flipClass}`}>
-      <h2 className={`player-name ${flipClass} ${writeMode}`}>{props.text}</h2>
-      <div className="player-score-right ${flipClass}`">
+      <h2 style={{"color":props.playerColor}} className={`player-name ${flipClass} ${writeMode}`}>{props.text}</h2>
+      <div className={`player-score-right ${flipClass}`}>
         <h2>{props.score}</h2>
       </div>
     </div>

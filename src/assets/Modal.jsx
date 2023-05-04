@@ -26,7 +26,7 @@ function Modal(props)
 
                 <div className="modal-buttons">
                     { props.buttonCancel !== undefined ?(
-                        <ButtonSwipe className="btn-cancel">Sair</ButtonSwipe>
+                        <ButtonSwipe onClick={props.onClickCancel} className="btn-cancel">Sair</ButtonSwipe>
                         ): null}
                     { props.buttonOk !== undefined ?(
                         <ButtonSwipe onClick={props.onClickOk} className='btn-continue'>{props.buttonOk}</ButtonSwipe>
