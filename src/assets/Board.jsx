@@ -9,7 +9,7 @@ function Tabuleiro(props){
 
     //So mostra celulas se ainda nem ganhou neste tabuleiro
     if(props.gameManager.boardWin[props.index] === -1){
-      for(let i = 0; i < 9; i++) {celulas.push(<Cell index={i} key={i} tableIndex={props.index} selected={props.selected} gameManager={props.gameManager} setGameManager={props.setGameManager}/>);}
+      for(let i = 0; i < 9; i++) {celulas.push(<Cell index={i} key={i} computer={props.computer}  tableIndex={props.index} selected={props.selected} gameManager={props.gameManager} setGameManager={props.setGameManager}/>);}
     }
     else{
        if(props.gameManager.selectedTable === props.index){

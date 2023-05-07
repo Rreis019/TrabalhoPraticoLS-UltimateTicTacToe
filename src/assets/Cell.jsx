@@ -16,8 +16,14 @@ function Celula(props){
     const handleMouseEnter = () => {setHovered(true);};
     const handleMouseLeave = () => {setHovered(false);};
     const handleClick = () => {
+        const { board, player } = gameManager;
+
+        if(gameManager.gameMode === "PvC" && player === false){
+            return;
+        }
+
+
         if (selected && gameManager.board[tableIndex][index] === '') {
-            const { board, player } = gameManager;
 
             const playerSymbol = player ? "O" : "X";
             console.log(tableIndex + " " + index);
@@ -27,16 +33,22 @@ function Celula(props){
             gameManager.checkForWinnerInSelectedTable(tableIndex);
             gameManager.checkForWinnerInGame();
             
-            
-            setGameManager(prevState => ({
-                ...prevState,
-                player: !player,
+            const updatedGameManager = {
+                ...gameManager,
+                player: !gameManager.player,
                 selectedTable: index,
                 board: newBoard
-            }));
+            };
+
+            setGameManager(updatedGameManager);
+
+      
         }
       };
 
+ 
+
+    
     return (
         <div 
         className={`square${props.selected && hovered && gameManager.board[tableIndex][index] === '' ? 'hover' : ''}${props.selected && !props.gameManager.player ? ' selected-p1' : ''}${props.selected && props.gameManager.player ? ' selected-p2' : ''}${props.selected &&  gameManager.board[tableIndex][index] !== '' ? ' darker' : ''}`}

@@ -3,14 +3,15 @@ import Tables from "./assets/Tables";
 import ScorePanel from "./assets/ScorePanel";
 import InputFadeUp from "./assets/InputFadeUp";
 import RadioPicker from "./assets/RadioPicker";
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Modal from "./assets/Modal";
 import Toast from "./assets/Toast";
-
+import Bot from "./assets/Bot";
 
 function App() {
   const [startMenuVisible, setStartMenuVisible] = useState(true);
   const [winnerMenuVisible, setWinnerMenuVisible] = useState(false);
+
 
   const [firstPlayerName,setFirstName] = useState("");
   const [secondPlayerName,setSecondName] = useState("");
@@ -20,6 +21,7 @@ function App() {
 
 
   const [gameMode,setGameMode] = useState("");
+  const bot = new Bot(2);
 
   const winningPatterns = [    
     [0, 1, 2],//1 linha
@@ -52,7 +54,8 @@ function App() {
        setGameManager(prevState => ({...prevState,
         board : newboard,
         boardWin:newboardWin,
-        selectedTable: 4
+        selectedTable: 4,
+        winner: -1
       }));
     },
 
@@ -72,6 +75,50 @@ function App() {
       }));
     },
 
+    //Will find cells that i can select
+    getPlayableCells : function(boards,boardWin,tableIndex)
+    {
+      const emptyCells = [];
+      const isTableAlreadyWon = this.boardWin[tableIndex] !== -1;
+      if(isTableAlreadyWon === false)
+      {
+        const currentBoard = this.board[tableIndex];
+        for (let i = 0; i < currentBoard.length; i++) {
+          if (currentBoard[i] === "") {
+            emptyCells.push({
+              tableIndex: tableIndex,
+              cellIndex: i
+            });
+          }
+        }
+      }
+      else{
+        const playableTables = [];
+        for (let i = 0; i < this.boardWin.length; i++) {
+          if(this.boardWin[i] === -1){playableTables.push(i);}
+        }
+
+        for (let index = 0; index < playableTables.length; index++) {
+          const table = this.board[index];
+          for (let o = 0; o < table.length; o++) {
+            if(table[o] == "")
+            {
+              emptyCells.push({
+                tableIndex: index,
+                cellIndex: o
+              });
+            }
+          }
+        }
+
+      }
+
+      console.log(emptyCells);
+
+
+      return emptyCells;
+    },
+
 
     checkForWinnerInGame : function()
     {
@@ -84,11 +131,14 @@ function App() {
             
 
               //Aumentar a pontução do jogo ganhou 
+              this.winner = player;
               if(player === true){
-                setGameManager(prevState => ({...prevState,scoreP1:this.scoreP1+1}));
+                this.scoreP1++;
+                //setGameManager(prevState => ({...prevState,scoreP1:this.scoreP1+1}));
               }
               else{
-                setGameManager(prevState => ({...prevState,scoreP2: this.scoreP2+1}));
+                this.scoreP2++;
+                //setGameManager(prevState => ({...prevState,scoreP2: this.scoreP2+1}));
               }
 
             setWinnerMenuVisible(true);
@@ -103,10 +153,7 @@ function App() {
       const { board, boardWin ,player} = this;
       console.log(this);
       if(boardWin[tableIndex] !== -1){return;}
-      
-     
 
-      
       const currentPlayer = player === false ? "X" : "O";
 
       for (let i = 0; i < winningPatterns.length; i++) {
@@ -143,8 +190,10 @@ function App() {
       return;
     }
 
-    if(secondPlayerName.trim() === ''){
-      const newToast = {
+    if(gameMode === "PvP")
+    {
+      if(secondPlayerName.trim() === ''){
+        const newToast = {
         type: "warning",
         message: undefined,
         title: "Segundo nome esta vazio",
@@ -152,6 +201,7 @@ function App() {
       //setToasts([...Toasts, newToast]);
       setToasts([newToast]);
       return;
+      }
     }
 
     //verifica se o campo esta vazio
@@ -169,7 +219,8 @@ function App() {
     setGameManager(prevState => ({
       ...prevState,
       firstPlayerName: firstPlayerName,
-      secondPlayerName: secondPlayerName,
+      secondPlayerName: gameMode === "PvP" ? secondPlayerName : "Computer",
+      gameMode: gameMode
     }));
     
     
@@ -194,6 +245,13 @@ function App() {
     setWinnerMenuVisible(false);
   }
 
+  useEffect(() => {   
+    //Start computer play if is PvC gamemode
+    if(gameManager.gameMode === "PvC"&& gameManager.player === false && gameManager.winner == -1){
+        bot.play(gameManager,setGameManager,gameManager.selectedTable); 
+    }
+  });
+
   return(
     <div className="app">
 
@@ -206,8 +264,8 @@ function App() {
         <p>Parabens!!!</p>
 
         {gameManager.player === false ?
-          <p >O <span  style={{ color: '#DD5E61' }}>{firstPlayerName}</span> ganhou a partida de Tic Tac Toe</p>:
-          <p>O <span  style={{ color: '#4A68A3' }}>{secondPlayerName}</span> ganhou a partida de Tic Tac Toe</p>
+          <p >O <span  style={{ color: '#DD5E61' }}>{gameManager.firstPlayerName}</span> ganhou a partida de Tic Tac Toe</p>:
+          <p>O <span  style={{ color: '#4A68A3' }}>{gameManager.secondPlayerName}</span> ganhou a partida de Tic Tac Toe</p>
         }
        
         </Modal>
@@ -217,7 +275,10 @@ function App() {
         <div className="start-menu">
           <p>Nome dos Jogadores</p>
           <InputFadeUp setInputText={setFirstName} style={inputStyle}  title="Nome 1º Jogador"></InputFadeUp>
-          <InputFadeUp setInputText={setSecondName} style={inputStyle} title="Nome 2º Jogador"></InputFadeUp>
+          
+          {gameMode === "PvP" || gameMode === "" ? 
+            <InputFadeUp setInputText={setSecondName} style={inputStyle} title="Nome 2º Jogador"></InputFadeUp>:""
+          }
 
           <p>Modo de jogo</p>
           <RadioPicker
@@ -232,7 +293,7 @@ function App() {
       </Modal>
       <div className="container">
         <ScorePanel gameManager={gameManager}/>
-        <Tables gameManager={gameManager} setGameManager={setGameManager} />
+        <Tables computer={bot} gameManager={gameManager} setGameManager={setGameManager} />
       </div>
     </div>
   );
