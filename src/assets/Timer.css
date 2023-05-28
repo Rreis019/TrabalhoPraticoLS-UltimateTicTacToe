@@ -1,0 +1,61 @@
+
+
+.timer{
+    max-width: 185px;
+
+    padding-inline: 10px;
+    padding-block: 7px;
+    background-color: #383838;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    height: 100%;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+}
+
+@keyframes timerAnimation {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .animated {
+    /*animation: timerAnimation 0.5s;*/
+  }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+
+
+/* Resto do seu CSS aqui */
+
+
+.timer h1{
+    font-family: 'Inter', sans-serif;
+    font-size: 50px;
+    font-weight: 700;
+}
+
+@media only screen and (max-width: 930px) {
+  .timer h1{font-size: 40px;}
+}
+
+@media only screen and (max-width: 730px) {
+  .timer h1{font-size: 30px;}
+}
+
+@media only screen and (max-width: 530px) {
+  .timer h1{font-size: 15px;}
+  .timer{border-width: 2px;}
+}

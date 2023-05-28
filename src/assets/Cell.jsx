@@ -18,12 +18,16 @@ function Celula(props){
     const handleClick = () => {
         const { board, player } = gameManager;
 
-        if(gameManager.gameMode === "PvC" && player === false){
-            return;
-        }
-
-
         if (selected && gameManager.board[tableIndex][index] === '') {
+            var emptys = gameManager.getPlayableCells();
+            if(emptys.length == 0){
+                setGameManager(prevState => ({...prevState,gameState: 2}));//TIE
+                return;
+            }
+
+            if(gameManager.gameMode === "PvC" && player === false){
+                return;
+            }
 
             const playerSymbol = player ? "O" : "X";
             console.log(tableIndex + " " + index);
@@ -41,7 +45,7 @@ function Celula(props){
             };
 
             setGameManager(updatedGameManager);
-
+            props.setResetTimer(true);
       
         }
       };

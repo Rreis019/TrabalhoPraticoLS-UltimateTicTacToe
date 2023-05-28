@@ -8,9 +8,15 @@ import Modal from "./assets/Modal";
 import Toast from "./assets/Toast";
 import Bot from "./assets/Bot";
 
+
+import './assets/Timer.css'
+
+
 function App() {
   const [startMenuVisible, setStartMenuVisible] = useState(true);
-  const [winnerMenuVisible, setWinnerMenuVisible] = useState(false);
+  //const [winnerMenuVisible, setWinnerMenuVisible] = useState(false);
+  
+  const [resetTimer,setResetTimer] = useState(false);
 
 
   const [firstPlayerName,setFirstName] = useState("");
@@ -34,6 +40,12 @@ function App() {
     [2, 4, 6] //2 diagonal
   ];
 
+  const STATE_NOT_PLAYING = 0;
+  const STATE_PLAYING = 1;
+  const STATE_TIE = 2;
+  const STATE_WIN = 3;
+  const STATE_TIMEOUT = 4;
+
   var [gameManager, setGameManager] = useState({ //Game Manager
     player: true, //indica qual player vai jogar | player == false ("O") | player == true ("X")
     board: Array.from({ length: 9 }, () => Array(9).fill('')), //Matrix 2D array que em cada array vai ter texto de cada celula
@@ -41,11 +53,15 @@ function App() {
     selectedTable: 4, //indica qual tabela esta selecionada
     scoreP1: 0,
     scoreP2: 0,
-    winner: -1, //Indica quem ganhou
+    winner: -1, //Indica quem ganhou 
     firstPlayerName : "...",
     secondPlayerName : "...",
     gameMode:"",
-
+    gameState:STATE_NOT_PLAYING,
+    //0 -> playing
+    //1 -> tie
+    //2 -> win
+    //3 -> timeout
 
     cleanTable : function()
     {
@@ -113,7 +129,7 @@ function App() {
 
       }
 
-      console.log(emptyCells);
+      //console.log(emptyCells);
 
 
       return emptyCells;
@@ -140,8 +156,9 @@ function App() {
                 this.scoreP2++;
                 //setGameManager(prevState => ({...prevState,scoreP2: this.scoreP2+1}));
               }
-
-            setWinnerMenuVisible(true);
+     
+            setGameManager(prevState => ({...prevState,gameState: STATE_WIN}));
+            //setWinnerMenuVisible(true);
             return;
           }
         }
@@ -162,7 +179,7 @@ function App() {
             board[tableIndex][b] === currentPlayer &&
             board[tableIndex][c] === currentPlayer) {
           boardWin[tableIndex] = currentPlayer === "X" ? 0 : 1;
-          console.log("Ganhou Tabuleiro");
+          //console.log("Ganhou Tabuleiro");
           return;
         }
       }
@@ -174,6 +191,23 @@ function App() {
     color: "white"
   };
   
+  function onTimeout(){
+    if(gameManager.gameState == STATE_PLAYING){
+      const newboardWin = Array(9).fill(-1);
+      const newboard = Array.from({ length: 9 }, () => Array(9).fill(''));
+      setGameManager(prevState => ({
+        ...prevState,
+        gameState: STATE_TIMEOUT,
+        board : newboard,
+        boardWin:newboardWin,
+        scoreP1: gameManager.player ?  prevState.scoreP1 :  prevState.scoreP1 + 1,
+        scoreP2: gameManager.player ? prevState.scoreP2 + 1 : prevState.scoreP2
+      }));
+
+    }
+  }
+
+
   function startGame()
   {
     setToasts([]);
@@ -220,17 +254,20 @@ function App() {
       ...prevState,
       firstPlayerName: firstPlayerName,
       secondPlayerName: gameMode === "PvP" ? secondPlayerName : "Computer",
-      gameMode: gameMode
+      gameMode: gameMode,
+      gameState:STATE_PLAYING
     }));
     
-    
     setStartMenuVisible(false);
+    setResetTimer(true);
   }
 
   function onClickWinnerMenuOK()
   {
     gameManager.cleanTable();
-    setWinnerMenuVisible(false);
+    setGameManager({...gameManager, gameState: STATE_PLAYING});
+    setResetTimer(true);
+    //setWinnerMenuVisible(false);
   }
 
   function backToMenu()
@@ -241,16 +278,23 @@ function App() {
     setFirstName("");
     setSecondName("");
     setGameMode("");
-    setStartMenuVisible(true);
-    setWinnerMenuVisible(false);
+    //setStartMenuVisible(true);
+    
+    
+    //setWinnerMenuVisible(false);
+    setGameManager({...gameManager, gameState: STATE_NOT_PLAYING});
   }
 
   useEffect(() => {   
     //Start computer play if is PvC gamemode
     if(gameManager.gameMode === "PvC"&& gameManager.player === false && gameManager.winner == -1){
         bot.play(gameManager,setGameManager,gameManager.selectedTable); 
+        setGameManager({...gameManager, player: true});
     }
   });
+
+
+
 
   return(
     <div className="app">
@@ -259,50 +303,63 @@ function App() {
            <Toast key={index} type={toast.type} isVisible={ToastsVisible} setIsVisible={setToastsVisible}   title={toast.title} message={toast.message}   ></Toast>
       ))}
 
-      {
-      <Modal title="Vencedor" isVisible={winnerMenuVisible} onClickCancel={backToMenu}  onClickOk={onClickWinnerMenuOK} buttonOk="Continuar" buttonCancel >
+      { gameManager.gameState == STATE_WIN ?
+      <Modal title="Vencedor" isVisible={true} onClickCancel={backToMenu}  onClickOk={onClickWinnerMenuOK} buttonOk="Continuar" buttonCancel >
         <p>Parabens!!!</p>
-
+        {gameManager.gameState == STATE_WIN}
         {gameManager.player === false ?
           <p >O <span  style={{ color: '#DD5E61' }}>{gameManager.firstPlayerName}</span> ganhou a partida de Tic Tac Toe</p>:
           <p>O <span  style={{ color: '#4A68A3' }}>{gameManager.secondPlayerName}</span> ganhou a partida de Tic Tac Toe</p>
         }
        
-        </Modal>
-      }
-
-      <Modal  title="Ultimate TicTacToe" onClickOk={startGame}  isVisible={startMenuVisible} buttonOk="Começar">
-        <div className="start-menu">
-          <p>Nome dos Jogadores</p>
-          <InputFadeUp setInputText={setFirstName} style={inputStyle}  title="Nome 1º Jogador"></InputFadeUp>
-          
-          {gameMode === "PvP" || gameMode === "" ? 
-            <InputFadeUp setInputText={setSecondName} style={inputStyle} title="Nome 2º Jogador"></InputFadeUp>:""
-          }
-
-          <p>Modo de jogo</p>
-          <RadioPicker
-            name="GameMode"
-            setValue={setGameMode}
-            options={[
-              { name: "Player Vs Computer", value: "PvC" },
-              { name: "Player Vs Player", value: "PvP" },
-            ]}
-          />
-        </div>
       </Modal>
+      :""}
+      
+      {gameManager.gameState == STATE_TIMEOUT ?
+          <Modal title="O tempo esgotou" isVisible={true} onClickCancel={backToMenu}  onClickOk={onClickWinnerMenuOK} buttonOk="Continuar" buttonCancel >
+          {gameManager.player === false ?
+            <p >O <span  style={{ color: '#DD5E61' }}>{gameManager.firstPlayerName}</span> ganhou a partida de Tic Tac Toe</p>:
+            <p>O <span  style={{ color: '#4A68A3' }}>{gameManager.secondPlayerName}</span> ganhou a partida de Tic Tac Toe</p>
+          }
+          </Modal>
+      :""}
+
+      {gameManager.gameState == STATE_TIE ?
+          <Modal title="Empatou" isVisible={true} onClickCancel={backToMenu}  onClickOk={onClickWinnerMenuOK} buttonOk="Continuar" buttonCancel >
+            <p >Empatou ninguem ganhou o jogo...</p>  
+          </Modal>
+      :""}
+
+      {gameManager.gameState == STATE_NOT_PLAYING ?
+        <Modal  title="Ultimate TicTacToe" onClickOk={startGame}  isVisible={true} buttonOk="Começar">
+          <div className="start-menu">
+            <p>Nome dos Jogadores</p>
+            <InputFadeUp setInputText={setFirstName} style={inputStyle}  title="Nome 1º Jogador"></InputFadeUp>
+            
+            {gameMode === "PvP" || gameMode === "" ? 
+              <InputFadeUp setInputText={setSecondName} style={inputStyle} title="Nome 2º Jogador"></InputFadeUp>:""
+            }
+
+            <p>Modo de jogo</p>
+            <RadioPicker
+              name="GameMode"
+              setValue={setGameMode}
+              options={[
+                { name: "Player Vs Computer", value: "PvC" },
+                { name: "Player Vs Player", value: "PvP" },
+              ]}
+            />
+          </div>
+        </Modal>
+      :""}
+
       <div className="container">
-        <ScorePanel gameManager={gameManager}/>
-        <Tables computer={bot} gameManager={gameManager} setGameManager={setGameManager} />
+        <ScorePanel  onTimeout={onTimeout} setResetTimer={setResetTimer} resetTimer={resetTimer}  gameManager={gameManager}/>
+        <Tables setResetTimer={setResetTimer} computer={bot} gameManager={gameManager} setGameManager={setGameManager} />
       </div>
     </div>
   );
 
-  return (
-    <>
-      <Toast type="warning"  title="O primeiro nome esta vazio"  ></Toast>
-    </>
-  );
   
 }
 export default App;
