@@ -4,7 +4,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import Cell from './Cell';
 import './Board.css';
 
-function Tabuleiro(props){
+function Board(props){
     const celulas = [];
 
     //So mostra celulas se ainda nem ganhou neste tabuleiro
@@ -37,4 +37,4 @@ function Tabuleiro(props){
     );
 }
 
-export default Tabuleiro;
+export default Board;

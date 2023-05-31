@@ -65,14 +65,20 @@ function App() {
 
     cleanTable : function()
     {
-       const newboardWin = Array(9).fill(-1);
-       const newboard = Array.from({ length: 9 }, () => Array(9).fill(''));
+       this.boardWin = Array(9).fill(-1);
+       this.board = Array.from({ length: 9 }, () => Array(9).fill(''));
+       this.selectedTable = 4;
+       this.winner = -1;
+       
+       /*
+
        setGameManager(prevState => ({...prevState,
         board : newboard,
         boardWin:newboardWin,
         selectedTable: 4,
         winner: -1
       }));
+      */
     },
 
     resetScore : function()
@@ -157,7 +163,8 @@ function App() {
                 //setGameManager(prevState => ({...prevState,scoreP2: this.scoreP2+1}));
               }
      
-            setGameManager(prevState => ({...prevState,gameState: STATE_WIN}));
+            //setGameManager(prevState => ({...prevState,gameState: STATE_WIN}));
+            this.gameState = STATE_WIN;
             //setWinnerMenuVisible(true);
             return;
           }
