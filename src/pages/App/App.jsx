@@ -1,15 +1,16 @@
-import './app.css'
-import Tables from "./assets/Tables";
-import ScorePanel from "./assets/ScorePanel";
-import InputFadeUp from "./assets/InputFadeUp";
-import RadioPicker from "./assets/RadioPicker";
+import './App.css';
 import React, { useState,useEffect } from 'react';
-import Modal from "./assets/Modal";
-import Toast from "./assets/Toast";
-import Bot from "./assets/Bot";
 
+import Tables from "../../components/Board/Tables";
+import Bot from "../../components/Board/Bot";
 
-import './assets/Timer.css'
+import InputFadeUp from "../../components/UI/InputFadeUp";
+import RadioPicker from "../../components/UI/RadioPicker";
+import Modal from "../../components/UI/Modal";
+import Toast from "../../components/UI/Toast";
+
+import ScorePanel from "../../components/Score/ScorePanel";
+import '../../components/Score/Timer.css';
 
 
 function App() {
