@@ -4,7 +4,7 @@
 
 Este é um projeto desenvolvido como trabalho da disciplina Linguagens Script da Universidade ISEC. O objetivo do trabalho era criar o jogo "Ultimate Tic-Tac-Toe" utilizando React, FontAwesome para ícones e diversos componentes personalizados.
 
-O Ultimate Tic-Tac-Toe é uma variação do clássico jogo da velha, no qual são utilizados nove tabuleiros menores agrupados em um tabuleiro maior.<br>
+O Ultimate Tic-Tac-Toe é uma variação do clássico jogo do galo, no qual são utilizados nove tabuleiros menores agrupados em um tabuleiro maior.<br>
 O objetivo é vencer três tabuleiros em sequência para ganhar o jogo.
 
 ## Como Instalar/Usar
